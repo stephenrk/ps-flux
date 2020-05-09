@@ -1,5 +1,6 @@
 import dispatcher from "../appDispatcher";
 import * as courseApi from "../api/courseApi";
+import * as authorApi from "../api/authorApi";
 import actionTypes from "./actionTypes";
 
 // Action creator
@@ -20,9 +21,12 @@ export function saveCourse(course) {
 
 export function loadCourses() {
   return courseApi.getCourses().then(courses => {
-    dispatcher.dispatch({
-      actionType: actionTypes.LOAD_COURSES,
-      courses: courses
+    authorApi.getAuthors().then(authors => {
+      dispatcher.dispatch({
+        actionType: actionTypes.LOAD_COURSES,
+        courses: courses,
+        authors: authors
+      });
     });
   });
 }
@@ -33,5 +37,11 @@ export function deleteCourse(id) {
       actionType: actionTypes.DELETE_COURSE,
       id: id
     });
+  });
+}
+
+export function getAuthors() {
+  return authorApi.getAuthors().then(authors => {
+    return authors;
   });
 }

@@ -7,6 +7,7 @@ import * as courseActions from "../actions/courseActions";
 const ManageCoursePage = props => {
   const [errors, setErrors] = useState({});
   const [courses, setCourses] = useState(courseStore.getCourses());
+  const [authors, setAuthors] = useState([]);
   const [course, setCourse] = useState({
     id: null,
     slug: "",
@@ -23,8 +24,13 @@ const ManageCoursePage = props => {
     } else if (slug) {
       setCourse(courseStore.getCourseBySlug(slug));
     }
+    if (authors.length === 0) {
+      courseActions.getAuthors().then(authors => {
+        setAuthors(authors);
+      });
+    }
     return () => courseStore.removeChangeListener(onChange); // Essa função é executada pelo useEffect no unmount do componente
-  }, [courses.length, props.match.params.slug]); // Only watch this param, when it changes run the useEffect
+  }, [courses.length, props.match.params.slug, authors.length]); // Only watch this param, when it changes run the useEffect
 
   function onChange() {
     setCourses(courseStore.getCourses());
@@ -38,7 +44,6 @@ const ManageCoursePage = props => {
   }
 
   function formIsValid() {
-    debugger;
     const _errors = {};
 
     if (!course.title) _errors.title = "Title is required";
@@ -66,6 +71,7 @@ const ManageCoursePage = props => {
       <h2>Manage Course</h2>
       <CourseForm
         course={course}
+        authors={authors}
         errors={errors}
         onChange={handleChange}
         onSubmit={handleSubmit}

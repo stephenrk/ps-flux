@@ -28,7 +28,11 @@ function CourseList(props) {
               <td>
                 <Link to={"/course/" + course.slug}>{course.title}</Link>
               </td>
-              <td>{course.authorId}</td>
+              <td>
+                {props.authors.find(author => author.id === course.authorId) &&
+                  props.authors.find(author => author.id === course.authorId)
+                    .name}
+              </td>
               <td>{course.category}</td>
             </tr>
           );
